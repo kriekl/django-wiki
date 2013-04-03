@@ -147,6 +147,12 @@ LOGGING = {
 WIKI_ANONYMOUS_WRITE = True
 WIKI_ANONYMOUS_CREATE = False
 
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.ActiveDirectoryGroupMembershipSSLBackend',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
+
 # Do not user /accounts/profile as default
 LOGIN_REDIRECT_URL = "/"
 
