@@ -1,17 +1,17 @@
-mport ldap;
+import ldap;
 
 from django.contrib.auth.models import User, Group
 
 class ActiveDirectoryGroupMembershipSSLBackend:
     #Required parameters
-    AD_DNS_NAME ='your remote ldap server location';
+    AD_DNS_NAME ='xo.online.ntnu.no';
     AD_LDAP_PORT = 636
     AD_LDAP_URL = 'ldaps://%s' % AD_DNS_NAME;
-    AD_SEARCH_DN = 'dc=bbc,dc=ad,dc=bcc,dc=net'; # this is your search dn
-    AD_NT4_DOMAIN = 'bbc.ad.bbc.net'; #its your ad domain
+    AD_SEARCH_DN = 'dc=online,dc=ntnu,dc=no'; # this is your search dn
+    AD_NT4_DOMAIN = 'xo.online.ntnu.no'; #its your ad domain
     AD_SEARCH_FIELDS = ['mail','givenName','sn','sAMAccountName','memberOf'];
     AD_MEMBERSHIP_REQ = ['Group_Required','Alternative_Group'];
-    AD_CERT_FILE = "C:/player/Python/Application/cert/mycert.cer";
+    AD_CERT_FILE = "/root/django-wiki-cert.cer";
 AD_DEBUG = False;
 AD_DEBUG_FILE ='';
 
