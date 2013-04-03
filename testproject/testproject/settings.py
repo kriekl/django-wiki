@@ -147,7 +147,7 @@ LOGGING = {
 WIKI_ANONYMOUS_WRITE = True
 WIKI_ANONYMOUS_CREATE = False
 
-UTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = (
     'django_auth_ldap.backend.ActiveDirectoryGroupMembershipSSLBackend',
     'django.contrib.auth.backends.ModelBackend'
 )
