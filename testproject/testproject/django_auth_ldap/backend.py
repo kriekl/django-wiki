@@ -12,8 +12,8 @@ class ActiveDirectoryGroupMembershipSSLBackend:
     AD_SEARCH_FIELDS = ['mail','givenName','sn','sAMAccountName','memberOf'];
     AD_MEMBERSHIP_REQ = ['Group_Required','Alternative_Group'];
     AD_CERT_FILE = "/root/django-wiki-cert.cer";
-AD_DEBUG = False;
-AD_DEBUG_FILE ='';
+    AD_DEBUG = False;
+    AD_DEBUG_FILE ='';
 
 def authenticate(self,username=None,password=None):
     try:
