@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from os import path as os_path
+import ldap
+from django_auth_ldap.config import LDAPSearch
+
 PROJECT_PATH = os_path.abspath(os_path.split(__file__)[0])
 
 DEBUG = True
@@ -112,6 +115,7 @@ INSTALLED_APPS = (
     'wiki.plugins.attachments',
     'wiki.plugins.notifications',
     'mptt',
+    'django_ldapbackend',
     #'haystack',
 )
 
@@ -120,25 +124,52 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+#LOGGING = {
+#    'version': 1,
+#    'disable_existing_loggers': False,
+#    'filters': {
+#        'require_debug_false': {
+#            '()': 'django.utils.log.RequireDebugFalse'
+#        }
+#    },
+#    'handlers': {
+#        'mail_admins': {
+#            'level': 'ERROR',
+#            'filters': ['require_debug_false'],
+#            'class': 'django.utils.log.AdminEmailHandler'
+#        }
+#    },
+#    'loggers': {
+#        'django.request': {
+#            'handlers': ['mail_admins'],
+#            'level': 'ERROR',
+#            'propagate': True,
+#        },
+#    }
+#}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'stream_to_console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
+            'propagate': True,
+        },
+        'django_auth_ldap': {
+            'handlers': ['stream_to_console'],
+            'level': 'DEBUG',
             'propagate': True,
         },
     }
@@ -148,10 +179,29 @@ WIKI_ANONYMOUS_WRITE = True
 WIKI_ANONYMOUS_CREATE = False
 
 AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.ActiveDirectoryGroupMembershipSSLBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
+# For this, you want to be using the -H flag setting you used above.
+AUTH_LDAP_SERVER_URI = "ldaps://xo.online.ntnu.no:636"
+# This is the distinguished name (DN), the -D flag above.
+AUTH_LDAP_BIND_DN = 'cn=admin,dc=online,dc=ntnu,dc=no'
+# The bing password, the -w flag above.
+AUTH_LDAP_BIND_PASSWORD = 'ldap_admin_pwd'
+
+# We do lookups on a user by email so this may not work for you
+# but you should get the idea. 
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,dc=online,dc=ntnu,dc=no",
+    ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+
+# The following OPT_REFERRALS option is CRUCIAL for getting this 
+# working with MS Active Directory it seems, unfortunately I have
+# no idea why; it just hangs if you don't set it to 0 for us.
+AUTH_LDAP_CONNECTION_OPTIONS = {
+        ldap.OPT_DEBUG_LEVEL: 0,
+        ldap.OPT_REFERRALS: 0,
+}
 
 # Do not user /accounts/profile as default
 LOGIN_REDIRECT_URL = "/"
