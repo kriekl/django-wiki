@@ -22,5 +22,8 @@ from wiki.urls import get_pattern as get_wiki_pattern
 from django_notify.urls import get_pattern as get_notify_pattern
 urlpatterns += patterns('',
     (r'^notify/', get_notify_pattern()),
-    (r'', get_wiki_pattern())
+    (r'', get_wiki_pattern()),
+
+    (r'^profile/password/$', 'django_ldapbackend.views.password_change'),
+    (r'^profile/password/changed/$', 'django.contrib.auth.views.password_change_done')
 )

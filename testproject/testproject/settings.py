@@ -184,15 +184,15 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # For this, you want to be using the -H flag setting you used above.
-AUTH_LDAP_SERVER_URI = "ldaps://xo.online.ntnu.no:636"
+AUTH_LDAP_SERVER_URI = "Ldap-location"
 # This is the distinguished name (DN), the -D flag above.
-AUTH_LDAP_BIND_DN = 'cn=admin,dc=online,dc=ntnu,dc=no'
+AUTH_LDAP_BIND_DN = 'Ldap-DN'
 # The bing password, the -w flag above.
-AUTH_LDAP_BIND_PASSWORD = 'ldap_admin_pwd'
+AUTH_LDAP_BIND_PASSWORD = 'Ldap-password'
 
 # We do lookups on a user by email so this may not work for you
 # but you should get the idea. 
-AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,dc=online,dc=ntnu,dc=no",
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ldap-search",
     ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
 
 # The following OPT_REFERRALS option is CRUCIAL for getting this 
