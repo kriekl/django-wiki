@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from os import path as os_path
 import ldap
-from django_auth_ldap.config import LDAPSearch
+from django_auth_ldap.config import LDAPSearch, PosixGroupType
+# GroupOfNamesType
 
 PROJECT_PATH = os_path.abspath(os_path.split(__file__)[0])
 
@@ -184,20 +185,31 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # For this, you want to be using the -H flag setting you used above.
-AUTH_LDAP_SERVER_URI = "Ldap-location"
+AUTH_LDAP_SERVER_URI = 'ldaps , server uri'
 # This is the distinguished name (DN), the -D flag above.
-AUTH_LDAP_BIND_DN = 'Ldap-DN'
+AUTH_LDAP_BIND_DN = 'cn=admin,dc=online,dc=ntnu,dc=no'
 # The bing password, the -w flag above.
-AUTH_LDAP_BIND_PASSWORD = 'Ldap-password'
+AUTH_LDAP_BIND_PASSWORD = 'Ldap password'
 
-# We do lookups on a user by email so this may not work for you
-# but you should get the idea. 
-AUTH_LDAP_USER_SEARCH = LDAPSearch("ldap-search",
+#Looks up user in ldap
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,dc=online,dc=ntnu,dc=no",
     ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+
+#Looks up groups in ldap
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=groups, dc=online, dc=ntnu, dc=no",
+    ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)")
+
+#Ldap Group Type for linux:
+AUTH_LDAP_GROUP_TYPE = PosixGroupType()
+
+#Population Groups after a member joins.
+AUTH_LDAP_MIRROR_GROUPS = True
+
 
 # The following OPT_REFERRALS option is CRUCIAL for getting this 
 # working with MS Active Directory it seems, unfortunately I have
 # no idea why; it just hangs if you don't set it to 0 for us.
+
 AUTH_LDAP_CONNECTION_OPTIONS = {
         ldap.OPT_DEBUG_LEVEL: 0,
         ldap.OPT_REFERRALS: 0,
